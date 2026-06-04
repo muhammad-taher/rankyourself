@@ -8,11 +8,16 @@ def get_db_connection():
     Returns the connection object.
     """
     try:
+        if not Config.DB_HOST or Config.DB_HOST == 'localhost' and os.environ.get('VERCEL'):
+            print("ERROR: Vercel cannot connect to 'localhost'. Please set a remote DB_HOST in Vercel settings.")
+            return None
+
         connection = mysql.connector.connect(
             host=Config.DB_HOST,
             user=Config.DB_USER,
             password=Config.DB_PASSWORD,
-            database=Config.DB_NAME
+            database=Config.DB_NAME,
+            connect_timeout=5 # Fail fast on serverless
         )
         if connection.is_connected():
             return connection

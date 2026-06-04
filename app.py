@@ -11,9 +11,10 @@ def create_app():
     # CSRF Protection
     csrf = CSRFProtect(app)
 
-    # Ensure upload folder exists
-    if not os.path.exists(app.config['UPLOAD_FOLDER']):
-        os.makedirs(app.config['UPLOAD_FOLDER'])
+    # Ensure upload folder exists (Skip on Vercel as it is read-only)
+    if not os.environ.get('VERCEL'):
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
 
     # Register Blueprints
     app.register_blueprint(auth_bp, url_prefix='/auth')
