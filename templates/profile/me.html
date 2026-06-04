@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow mb-4">
+            <div class="card-body text-center">
+                <img src="{{ user.profile_pic or 'https://ui-avatars.com/api/?name=' + user.name + '&size=150' }}" class="rounded-circle border mb-3" width="120">
+                <h3>{{ user.name }}</h3>
+                <p class="text-muted">{{ user.student_id }}</p>
+                <a href="{{ url_for('profile.public_profile', user_id=user.id) }}" class="btn btn-outline-secondary btn-sm mb-2">View Public Profile</a>
+            </div>
+        </div>
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white"><h5>Personal & Platform Links</h5></div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">GitHub</label>
+                            <input type="url" name="github_url" class="form-control" value="{{ user.github_url or '' }}" placeholder="https://github.com/...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">LinkedIn</label>
+                            <input type="url" name="linkedin_url" class="form-control" value="{{ user.linkedin_url or '' }}" placeholder="https://linkedin.com/in/...">
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label class="form-label">Codeforces Profile</label>
+                        <input type="url" name="codeforces_url" class="form-control" value="{{ user.codeforces_url or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">CodeChef Profile</label>
+                        <input type="url" name="codechef_url" class="form-control" value="{{ user.codechef_url or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">LeetCode Profile</label>
+                        <input type="url" name="leetcode_url" class="form-control" value="{{ user.leetcode_url or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">AtCoder Profile</label>
+                        <input type="url" name="atcoder_url" class="form-control" value="{{ user.atcoder_url or '' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Beecrowd Profile</label>
+                        <input type="url" name="beecrowd_url" class="form-control" value="{{ user.beecrowd_url or '' }}">
+                    </div>
+                    
+                    <div class="alert alert-info py-2">
+                        <label class="form-label small mb-1"><strong>Manual Beecrowd Solved Count</strong></label>
+                        <input type="number" name="beecrowd_solved" class="form-control form-control-sm" placeholder="Enter count manually">
+                        <small class="text-muted">Since Beecrowd blocks automatic syncing, please update this manually.</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Save All Updates</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">CP Accounts</h5>
+                <div>
+                    <a href="{{ url_for('profile.sync_stats') }}" class="btn btn-sm btn-info me-2 text-white">Sync Stats</a>
+                    <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#addAccount">Add New</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Username</th>
+                            <th>Rating</th>
+                            <th>Solved</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for acc in accounts %}
+                        <tr>
+                            <td>{{ acc.platform_name }}</td>
+                            <td>{{ acc.username }}</td>
+                            <td>{{ acc.current_rating or 'N/A' }}</td>
+                            <td>{{ acc.total_solved or '0' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addAccount" tabindex="-1">
+    <div class="modal-dialog">
+        <form class="modal-content" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="modal-header"><h5>Add CP Account</h5></div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Platform</label>
+                    <select name="platform_id" class="form-select">
+                        {% for p in platforms %}
+                        <option value="{{ p.id }}">{{ p.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Username / ID</label>
+                    <input type="text" name="username" class="form-control" required>
+                    <div class="form-text">For <strong>Beecrowd</strong>, please use your <strong>numeric ID</strong> (found in your profile URL).</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save Account</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

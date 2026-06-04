@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Register</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label">Student ID</label>
+                        <input type="text" name="student_id" class="form-control" required placeholder="e.g. CE-15001">
+                        <small class="text-muted">Format: DEPT-YEAR-ROLL (e.g., CE-24031)</small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">MBSTU Email</label>
+                        <input type="email" name="email" class="form-control" required placeholder="example@mbstu.ac.bd">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Department</label>
+                            <select name="dept_id" class="form-select" required>
+                                {% for dept in depts %}
+                                <option value="{{ dept.id }}">{{ dept.short_code }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Batch</label>
+                            <select name="batch_id" class="form-select" required>
+                                {% for batch in batches %}
+                                <option value="{{ batch.id }}">{{ batch.batch_number }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

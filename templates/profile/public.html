@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <img src="{{ user.profile_pic or 'https://ui-avatars.com/api/?name=' + user.name + '&size=150' }}" class="rounded-circle border" width="150">
+                </div>
+                <h3>{{ user.name }}</h3>
+                <p class="text-muted">{{ user.dept_name }} | Batch {{ user.batch_number }}</p>
+                <p><strong>Student ID:</strong> {{ user.student_id }}</p>
+                
+                <div class="d-flex justify-content-center gap-2 mb-3">
+                    {% if user.github_url %}
+                        <a href="{{ user.github_url }}" target="_blank" class="btn btn-outline-dark btn-sm">GitHub</a>
+                    {% endif %}
+                    {% if user.linkedin_url %}
+                        <a href="{{ user.linkedin_url }}" target="_blank" class="btn btn-outline-primary btn-sm">LinkedIn</a>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="text-start">
+                    <h6>Platform Profiles</h6>
+                    <ul class="list-unstyled small">
+                        {% if user.codeforces_url %}<li><a href="{{ user.codeforces_url }}" target="_blank">Codeforces</a></li>{% endif %}
+                        {% if user.codechef_url %}<li><a href="{{ user.codechef_url }}" target="_blank">CodeChef</a></li>{% endif %}
+                        {% if user.leetcode_url %}<li><a href="{{ user.leetcode_url }}" target="_blank">LeetCode</a></li>{% endif %}
+                        {% if user.atcoder_url %}<li><a href="{{ user.atcoder_url }}" target="_blank">AtCoder</a></li>{% endif %}
+                        {% if user.beecrowd_url %}<li><a href="{{ user.beecrowd_url }}" target="_blank">Beecrowd</a></li>{% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Platform Statistics</h5>
+            </div>
+            <div class="card-body">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Username</th>
+                            <th>Current Rating</th>
+                            <th>Max Rating</th>
+                            <th>Solved</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for acc in accounts %}
+                        <tr>
+                            <td><strong>{{ acc.platform_name }}</strong></td>
+                            <td><code>{{ acc.username }}</code></td>
+                            <td>{{ acc.current_rating or 0 }}</td>
+                            <td>{{ acc.max_rating or 0 }}</td>
+                            <td><span class="badge bg-success">{{ acc.total_solved or 0 }}</span></td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No accounts linked yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

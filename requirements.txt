@@ -1,0 +1,8 @@
+flask
+flask-wtf
+mysql-connector-python
+python-dotenv
+werkzeug
+requests
+beautifulsoup4
+lxml

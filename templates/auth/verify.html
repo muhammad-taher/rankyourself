@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Verify Email</h4>
+            </div>
+            <div class="card-body">
+                <p>A verification code has been sent to your MBSTU email. Please enter it below to complete your registration.</p>
+                <form method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <div class="mb-3">
+                        <label class="form-label">Verification Code</label>
+                        <input type="text" name="code" class="form-control fs-4" required maxlength="6" autofocus>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100 text-white">Verify & Register</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

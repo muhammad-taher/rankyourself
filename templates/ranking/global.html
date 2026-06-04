@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2 class="text-center">Competitive Programming Leaderboard</h2>
+        <p class="text-muted text-center">Unified rankings across all platforms</p>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Search Student</label>
+                <input type="text" name="q" class="form-control" placeholder="Name or Student ID" value="{{ search_query or '' }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Department</label>
+                <select name="dept_id" class="form-select">
+                    <option value="">All Departments</option>
+                    {% for d in depts %}
+                    <option value="{{ d.id }}" {% if selected_dept == d.id %}selected{% endif %}>{{ d.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Batch</label>
+                <select name="batch_id" class="form-select">
+                    <option value="">All Batches</option>
+                    {% for b in batches %}
+                    <option value="{{ b.id }}" {% if selected_batch == b.id %}selected{% endif %}>Batch {{ b.batch_number }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Filter & Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Rank</th>
+                    <th>Name</th>
+                    <th>Dept/Batch</th>
+                    <th>Solved</th>
+                    <th>Peak Rating</th>
+                    <th>Unified Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in rankings %}
+                <tr>
+                    <td>
+                        {% if loop.index == 1 %}🥇
+                        {% elif loop.index == 2 %}🥈
+                        {% elif loop.index == 3 %}🥉
+                        {% else %}#{{ loop.index }}{% endif %}
+                    </td>
+                    <td>
+                        <div class="text-start ms-4">
+                            <a href="{{ url_for('profile.public_profile', user_id=student.user_id) }}" class="text-decoration-none text-dark">
+                                <strong>{{ student.name }}</strong>
+                            </a><br>
+                            <small class="text-muted">{{ student.student_id }}</small>
+                        </div>
+                    </td>
+                    <td><span class="badge bg-secondary">{{ student.dept }} {{ student.batch_number }}</span></td>
+                    <td>{{ student.total_solved or 0 }}</td>
+                    <td>{{ student.peak_rating or 0 }}</td>
+                    <td><span class="badge bg-success fs-6">{{ student.score|round(2) }}</span></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="py-4">No students found for this selection.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

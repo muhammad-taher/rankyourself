@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">MBSTU CP Ranking System</h1>
+        <p class="col-md-8 fs-4">Track your Competitive Programming progress, compare with your peers, and build your professional developer portfolio.</p>
+        {% if not session.get('user_id') %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Join the Leaderboard</a>
+        {% else %}
+            <a href="{{ url_for('profile.my_profile') }}" class="btn btn-success btn-lg">Go to My Profile</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
