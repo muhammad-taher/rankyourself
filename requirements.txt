@@ -1,5 +1,6 @@
 flask
 flask-wtf
+gunicorn
 mysql-connector-python
 python-dotenv
 werkzeug
