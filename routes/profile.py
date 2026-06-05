@@ -57,9 +57,11 @@ def my_profile():
         if platform_id and username:
             # Basic sanitization
             username = username.strip()[:100]
+            # Use ON DUPLICATE KEY UPDATE so users can fix typos by re-adding
             execute_query("""
-                INSERT IGNORE INTO student_cp_accounts (student_id, platform_id, username)
+                INSERT INTO student_cp_accounts (student_id, platform_id, username)
                 VALUES (%s, %s, %s)
+                ON DUPLICATE KEY UPDATE username = VALUES(username)
             """, (user_id, platform_id, username), commit=True)
             sync_student_stats(user_id)
             
