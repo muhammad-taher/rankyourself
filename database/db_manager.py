@@ -12,14 +12,22 @@ def get_db_connection():
             print("ERROR: Vercel cannot connect to 'localhost'. Please set a remote DB_HOST in Vercel settings.")
             return None
 
-        connection = mysql.connector.connect(
-            host=Config.DB_HOST,
-            user=Config.DB_USER,
-            password=Config.DB_PASSWORD,
-            database=Config.DB_NAME,
-            port=Config.DB_PORT,
-            connect_timeout=5 # Fail fast on serverless
-        )
+        connection_params = {
+            'host': Config.DB_HOST,
+            'user': Config.DB_USER,
+            'password': Config.DB_PASSWORD,
+            'database': Config.DB_NAME,
+            'port': Config.DB_PORT,
+            'connect_timeout': 5
+        }
+
+        # Add SSL if required (Aiven needs this)
+        if Config.DB_SSL_REQUIRED:
+            connection_params['ssl_disabled'] = False
+            # For Aiven specifically, we don't need the CA file if we just want it encrypted
+            # but if it fails, we can add more specific SSL params here.
+
+        connection = mysql.connector.connect(**connection_params)
         if connection.is_connected():
             return connection
     except Error as e:
