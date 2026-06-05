@@ -8,6 +8,8 @@ def get_db_connection():
     Returns the connection object.
     """
     try:
+        print(f"DEBUG: Attempting connection to {Config.DB_HOST} on port {Config.DB_PORT} (SSL: {Config.DB_SSL_REQUIRED})")
+        
         if not Config.DB_HOST or Config.DB_HOST == 'localhost' and os.environ.get('VERCEL'):
             print("ERROR: Vercel cannot connect to 'localhost'. Please set a remote DB_HOST in Vercel settings.")
             return None

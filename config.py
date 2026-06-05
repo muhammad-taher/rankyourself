@@ -3,14 +3,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Debug: Print loaded env variables (Redacted)
+print(f"DEBUG STARTUP: DB_HOST={os.environ.get('DB_HOST')}, DB_PORT={os.environ.get('DB_PORT')}, RENDER={os.environ.get('RENDER')}")
+
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
-    # Railway provides MYSQLHOST, MYSQLUSER, etc.
-    DB_HOST = os.environ.get('MYSQLHOST') or os.environ.get('DB_HOST') or 'localhost'
-    DB_USER = os.environ.get('MYSQLUSER') or os.environ.get('DB_USER') or 'root'
-    DB_PASSWORD = os.environ.get('MYSQLPASSWORD') or os.environ.get('DB_PASSWORD') or ''
-    DB_NAME = os.environ.get('MYSQLDATABASE') or os.environ.get('DB_NAME') or 'mbstu_cp_ranking'
-    DB_PORT = int(os.environ.get('DB_PORT') or os.environ.get('MYSQLPORT') or 3306)
+    
+    # Priority: DB_HOST > MYSQLHOST > localhost
+    DB_HOST = os.environ.get('DB_HOST') or os.environ.get('MYSQLHOST') or 'localhost'
+    
+    # Priority: DB_PORT > MYSQLPORT > 3306
+    _port = os.environ.get('DB_PORT') or os.environ.get('MYSQLPORT') or '3306'
+    DB_PORT = int(_port)
+    
+    DB_USER = os.environ.get('DB_USER') or os.environ.get('MYSQLUSER') or 'root'
+    DB_PASSWORD = os.environ.get('DB_PASSWORD') or os.environ.get('MYSQLPASSWORD') or ''
+    DB_NAME = os.environ.get('DB_NAME') or os.environ.get('MYSQLDATABASE') or 'mbstu_cp_ranking'
     # Aiven requires SSL
     DB_SSL_REQUIRED = os.environ.get('DB_SSL_REQUIRED', 'False').lower() == 'true' or os.environ.get('VERCEL') is not None or os.environ.get('RENDER') is not None
     UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/uploads')
