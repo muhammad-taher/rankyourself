@@ -1,4 +1,4 @@
-# Phase 2: Database Design - MBSTU CP Ranking System
+# Phase 2: Database Design - Rank YourSelf CP Ranking System
 
 ## Normalization (3NF)
 - **1NF**: Atomic values.
@@ -35,8 +35,18 @@ CREATE TABLE students (
     linkedin_url VARCHAR(255),
     portfolio_url VARCHAR(255),
     website_url VARCHAR(255),
+    -- Platform Profile URLs
+    codeforces_url VARCHAR(255),
+    codechef_url VARCHAR(255),
+    atcoder_url VARCHAR(255),
+    leetcode_url VARCHAR(255),
+    beecrowd_url VARCHAR(255),
+    -- Security & Verification
     is_verified BOOLEAN DEFAULT FALSE,
     verification_token VARCHAR(100),
+    verification_expiry DATETIME,
+    reset_token VARCHAR(6),
+    reset_expiry DATETIME,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (dept_id) REFERENCES departments(id) ON DELETE RESTRICT,
@@ -70,6 +80,11 @@ CREATE TABLE cp_history (
     current_rating INT NOT NULL,
     max_rating INT NOT NULL,
     contest_count INT NOT NULL,
+    -- Enhanced Metrics
+    lc_easy INT DEFAULT 0,
+    lc_medium INT DEFAULT 0,
+    lc_hard INT DEFAULT 0,
+    cf_quality_sum DOUBLE DEFAULT 0,
     captured_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES student_cp_accounts(id) ON DELETE CASCADE,
     INDEX idx_history_lookup (account_id, captured_at)
@@ -82,6 +97,11 @@ CREATE TABLE cp_current_stats (
     current_rating INT DEFAULT 0,
     max_rating INT DEFAULT 0,
     contest_count INT DEFAULT 0,
+    -- Enhanced Metrics
+    lc_easy INT DEFAULT 0,
+    lc_medium INT DEFAULT 0,
+    lc_hard INT DEFAULT 0,
+    cf_quality_sum DOUBLE DEFAULT 0,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (account_id) REFERENCES student_cp_accounts(id) ON DELETE CASCADE
 );
